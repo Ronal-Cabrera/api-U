@@ -20,6 +20,17 @@ mssql.connect(dbConfig, (err) => {
 app.use(express.json());
 
 
+// Middleware para gestionar la conexión a la base de datos
+app.use(async (req, res, next) => {
+  try {
+    await mssql.connect(dbConfig);
+    console.log('Conexión a la base de datos establecida');
+    next();
+  } catch (err) {
+    console.error('Error de conexión a la base de datos:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
 
 
 app.get('/', async (req, res) => {
@@ -60,6 +71,10 @@ app.get('/api/usuarios/:id', async (req, res) => {
 
 
 
+// Middleware para desconectar después de manejar la solicitud
+app.use((req, res) => {
+  mssql.close();
+});
 
 
 
