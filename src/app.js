@@ -27,9 +27,9 @@ app.use(express.json());
 
 
 // Rutas CRUD
-app.get('/api/usuarios', async (req, res) => {
+app.get('/api/pacientes', async (req, res) => {
   try {
-    const result = await mssql.query('SELECT * FROM Usuarios');
+    const result = await mssql.query('SELECT * FROM pacientes');
     res.json(result.recordset);
   } catch (err) {
     console.error('Error al obtener usuarios:', err);
