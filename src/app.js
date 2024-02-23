@@ -22,7 +22,9 @@ app.use(express.json());
 
 
 
-
+app.get('/', async (req, res) => {
+    res.send('APIs running');
+});
 
 
 
