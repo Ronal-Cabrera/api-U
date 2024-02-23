@@ -1,5 +1,5 @@
 // dbconfig.js
-/*
+
 module.exports = {
   user: 'db_aa50ce_rcabrerac4_admin',
   password: 'rcabrerac4',
@@ -9,8 +9,8 @@ module.exports = {
     encrypt: false, // Si estás utilizando Azure, establece esto en 'true'
   },
 };
-*/
 
+/*
 module.exports = {
     user: 'Administrador',
     password: 'Administrador',
@@ -20,3 +20,4 @@ module.exports = {
       encrypt: false, // Si estás utilizando Azure, establece esto en 'true'
     },
   };
+*/
