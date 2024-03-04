@@ -1,7 +1,7 @@
 // app.js
 const express = require('express');
 const mssql = require('mssql');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const dbConfig = require('./dbConfig.js');
 
 const app = express();
