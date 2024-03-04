@@ -1,6 +1,7 @@
 // app.js
 const express = require('express');
 const mssql = require('mssql');
+const bcrypt = require('bcrypt');
 const dbConfig = require('./dbConfig.js');
 
 const app = express();
@@ -38,7 +39,7 @@ app.get('/', async (req, res) => {
 });
 
 
-
+/*
 // Rutas CRUD
 app.get('/api/pacientes', async (req, res) => {
   try {
@@ -48,16 +49,27 @@ app.get('/api/pacientes', async (req, res) => {
     console.error('Error al obtener usuarios:', err);
     res.status(500).send('Error interno del servidor');
   }
+});*/
+
+app.get('/api/pacientes/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const result = await mssql.query(`SELECT * FROM pacientes WHERE PacienteID = ${id}`);
+    res.json(result.recordset[0]);
+  } catch (err) {
+    console.error('Error al obtener usuarios:', err);
+    res.status(500).send('Error interno del servidor');
+  }
 });
 
-app.get('/api/usuarios/:id', async (req, res) => {
+app.get('/api/prescripciones/:id', async (req, res) => {
     const userId = req.params.id;
   
     try {
-      const result = await mssql.query(`SELECT * FROM Usuarios WHERE Id = ${userId}`);
+      const result = await mssql.query(`SELECT * FROM prescripciones INNER JOIN medicamentos ON prescripciones.MedicamentoID = medicamentos.MedicamentoID WHERE PacienteID = ${userId}`);
       
       if (result.recordset.length > 0) {
-        res.json(result.recordset[0]);
+        res.json(result.recordset);
       } else {
         res.status(404).send('Usuario no encontrado');
       }
@@ -68,7 +80,31 @@ app.get('/api/usuarios/:id', async (req, res) => {
   });
 
   
+app.post('/api/usuarios', async (req, res) => {
+  const { nombre_usuario, password_usuario } = req.body;
 
+  try {
+    const result = await mssql.query(`SELECT * FROM usuarios_pacientes WHERE nombre_usuario = '${nombre_usuario}'`);
+
+    if (result.recordset.length > 0) {
+      const usuario = result.recordset[0];
+      
+      // Comparar la contraseña proporcionada con la contraseña almacenada en la base de datos
+      const contraseñaValida = await bcrypt.compare(password_usuario, usuario.password_usuario);
+
+      if (contraseñaValida) {
+        res.json(usuario.PacienteID);
+      } else {
+        res.status(401).send('Contraseña incorrecta');
+      }
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por nombre:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
 
 
 // Middleware para desconectar después de manejar la solicitud
