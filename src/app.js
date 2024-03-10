@@ -62,11 +62,101 @@ app.get('/api/pacientes/:id', async (req, res) => {
   }
 });
 
+app.get('/api/historialmedico/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await mssql.query(`SELECT * FROM historial_medico WHERE PacienteID = ${userId}`);
+    
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+app.get('/api/resultadoslaboratorio/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await mssql.query(`SELECT * FROM resultados_laboratorio WHERE PacienteID = ${userId}`);
+    
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+
+app.get('/api/decisionesclinicas/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await mssql.query(`SELECT * FROM decisiones_clinicas WHERE PacienteID = ${userId}`);
+    
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+
 app.get('/api/prescripciones/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await mssql.query(`SELECT * FROM prescripciones INNER JOIN medicamentos ON prescripciones.MedicamentoID = medicamentos.MedicamentoID WHERE prescripciones.PacienteID = ${userId}`);
+    
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+
+app.get('/api/registroactividadfisica/:id', async (req, res) => {
+  const userId = req.params.id;
+
+  try {
+    const result = await mssql.query(`SELECT * FROM registro_actividad_fisica WHERE PacienteID = ${userId}`);
+    
+    if (result.recordset.length > 0) {
+      res.json(result.recordset);
+    } else {
+      res.status(404).send('Usuario no encontrado');
+    }
+  } catch (err) {
+    console.error('Error al obtener usuario por ID:', err);
+    res.status(500).send('Error interno del servidor');
+  }
+});
+
+
+
+app.get('/api/registroalimentacion/:id', async (req, res) => {
     const userId = req.params.id;
   
     try {
-      const result = await mssql.query(`SELECT * FROM prescripciones INNER JOIN medicamentos ON prescripciones.MedicamentoID = medicamentos.MedicamentoID WHERE PacienteID = ${userId}`);
+      const result = await mssql.query(`SELECT * FROM registro_alimentacion WHERE PacienteID = ${userId}`);
       
       if (result.recordset.length > 0) {
         res.json(result.recordset);
